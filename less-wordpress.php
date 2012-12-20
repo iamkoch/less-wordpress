@@ -35,11 +35,50 @@ function less_wordpress_add_pages() {
 }
 
 function display_less_menu() { ?>
-    <div class="less-form-wrapper">
-        Debug is <?php
-            global $is_debug;
-        
-            echo ($is_debug ? "ON" : "OFF")
+    <div class="wrapper">
+        <div class="info">
+            <h1>LESS Wordpress</h1>
+            <h2>How to use</h2>
+            <ol>
+                <li>In your style.css file, add the usual WP comment block and nothing else</li>
+                <li>Create a folder off of your theme root called less</li>
+                <li>Create a file in this folder called application.less</li>
+                <li>Switch on development mode and hit save</li>
+            </ol>
+            <h2>What does this do?</h2>
+            <p>Each time you visit your site the plugin will generate the style.css file for you, unminified</p>
+            <h2>Won't this affect performance?</h2>
+            <p>Yes, but you don't care - you're in development</p>
+            <h2>Ah, but what about when I want to make my site live?</h2>
+            <p>Simple - switch to production mode, choose minification or not and hit save.</p>
+            <h2>But what will that do?</h2>
+            <p>That will compile and minify your CSS into your style.css one last time</p>
+        </div>
+        <div class="form-wrapper">
+            <form name="less-wordpress-settings" action="" method="post">
+                <label for="development">Mode</label>
+                <p>
+                    <input type="radio" value="development" id="development" name="mode" /> Development
+                </p>
+                <p>
+                    <input type="radio" id="production" value="production" name="mode" /> Production
+                    <input type="checkbox" id="minify" name="minify" value="minify"/> Minify?
+                </p>
+                <input type="submit" value="Save"/>
+            </form>
+        </div>
+        <?php
+            if ( !empty($_POST) ):
+                if ( isset($_POST['development']) ):
+                    add_option( "less-wordpress-development", true );
+                    delete_option("less-wordpress-production");
+                    delete_option("less-wordpress-production-minify");
+                elseif ( isset($_POST['production'] ) ):
+                    add_option( "less-wordpress-production", true );
+                    add_option( "less-wordpress-production-minify", isset($_POST['minify']) );
+                    delete_option( "less-wordpress-development" );
+                endif;
+            endif;
         ?>
     </div>
 <? }
